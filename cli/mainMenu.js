@@ -1,5 +1,6 @@
 import inquirer from 'inquirer'
 import { getAllDepartments } from '../models/department.js'
+import { getAllRoles } from '../models/role.js'
 
 const mainMenu = () => {
 	inquirer
@@ -19,10 +20,13 @@ const mainMenu = () => {
 			],
 			loop: false
 		})
-		.then(({selected}) => {
+		.then(({ selected }) => {
 			switch (selected) {
 				case 'View All Departments':
 					getAllDepartments()
+					break
+				case 'View All Roles':
+					getAllRoles()
 					break
 			}
 		})
