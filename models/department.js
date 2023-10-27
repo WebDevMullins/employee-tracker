@@ -1,4 +1,5 @@
 import * as cTable from 'console.table'
+import inquirer from 'inquirer'
 import { mainMenu } from '../cli/mainMenu.js'
 import { db } from '../config/db.js'
 
@@ -15,7 +16,31 @@ function getAllDepartments() {
 			console.log('')
 			mainMenu()
 		})
-		.catch((err) => console.error(err))
+		.catch((err) => console.error('Error fetching all departments: ', err))
 }
 
-export { getAllDepartments }
+function addDepartment() {
+	inquirer
+		.prompt([
+			{
+				type: 'input',
+				name: 'newDepartment',
+				message: 'What is the department name?'
+			}
+		])
+		.then(({ newDepartment }) => {
+			let sql = 'INSERT INTO department (name) VALUES (?)'
+			db.promise()
+				.query(sql, [newDepartment])
+				.then(() => {
+					console.log('')
+					console.log('================================================')
+					console.log('')
+					console.log(`${newDepartment} department successfully added!`)
+					getAllDepartments()
+				})
+		})
+		.catch((err) => console.error('Error adding department:', err))
+}
+
+export { addDepartment, getAllDepartments }
