@@ -1,6 +1,7 @@
 import inquirer from 'inquirer'
 import { getAllDepartments } from '../models/department.js'
 import { getAllRoles } from '../models/role.js'
+import { getAllEmployees } from '../models/employee.js'
 
 const mainMenu = () => {
 	inquirer
@@ -27,6 +28,9 @@ const mainMenu = () => {
 					break
 				case 'View All Roles':
 					getAllRoles()
+					break
+				case 'View All Employees':
+					getAllEmployees()
 					break
 			}
 		})
