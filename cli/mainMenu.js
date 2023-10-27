@@ -1,6 +1,6 @@
 import inquirer from 'inquirer'
 import { addDepartment, getAllDepartments } from '../models/department.js'
-import { getAllRoles } from '../models/role.js'
+import { addRole, getAllRoles, getDepartments } from '../models/role.js'
 import { getAllEmployees } from '../models/employee.js'
 
 const mainMenu = () => {
@@ -34,6 +34,10 @@ const mainMenu = () => {
 					break
 				case 'Add a Department':
 					addDepartment()
+					break
+				case 'Add a Role':
+					addRole()
+					// getDepartments()
 					break
 			}
 		})
