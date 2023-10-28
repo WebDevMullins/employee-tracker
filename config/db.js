@@ -10,8 +10,8 @@ const db = mysql.createConnection({
 	database: 'company_db'
 })
 
-db.connect(function (err) {
-	err ? console.error('error connecting: ' + err.stack) : console.log('connected as id ' + db.threadId)
-})
+// db.connect(function (err) {
+// 	err ? console.error('error connecting: ' + err.stack) : console.log('connected as id ' + db.threadId)
+// })
 
 export { db }

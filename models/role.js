@@ -60,7 +60,7 @@ function addRole() {
 					}
 				])
 				.then(({ name, salary, department }) => {
-					let sql = 'INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)'
+					let sql = 'INSERT INTO role (title, salary, department_name) VALUES (?, ?, ?)'
 					db.promise()
 						.query(sql, [name, salary, department])
 						.then(() => {
