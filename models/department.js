@@ -19,6 +19,20 @@ function getAllDepartments() {
 		.catch((err) => console.error('Error fetching all departments: ', err))
 }
 
+function getDepartmentNames() {
+	const sql = 'SELECT name FROM department'
+	return db
+		.promise()
+		.query(sql)
+		.then(([departments]) => {
+			const deptsArray = departments.map((department) => department.name)
+			return deptsArray
+		})
+		.catch((err) => {
+			console.error('Error fetching all departments: ', err)
+		})
+}
+
 function addDepartment() {
 	inquirer
 		.prompt([
@@ -43,4 +57,4 @@ function addDepartment() {
 		.catch((err) => console.error('Error adding department:', err))
 }
 
-export { addDepartment, getAllDepartments }
+export { addDepartment, getAllDepartments, getDepartmentNames }

@@ -2,10 +2,16 @@ import * as cTable from 'console.table'
 import inquirer from 'inquirer'
 import { mainMenu } from '../cli/mainMenu.js'
 import { db } from '../config/db.js'
+import { getDepartmentNames } from './department.js'
 
 function getAllRoles() {
-	const sql =
-		'SELECT role.id, role.title, department.name, role.salary FROM role INNER JOIN department ON role.department_id=department.id'
+	const sql = `
+	SELECT 
+		r.id, r.title, d.name, r.salary 
+	FROM role r
+	INNER JOIN department d
+	ON r.department_id = d.id
+	ORDER BY department_id ASC`
 	db.promise()
 		.query(sql)
 		.then(([roles]) => {
@@ -20,24 +26,8 @@ function getAllRoles() {
 		.catch((err) => console.error(err))
 }
 
-// enter the name, salary, and department for the role and that role is added to the database
-const getDepartments = () => {
-	const sql = 'SELECT name FROM department'
-	return db
-		.promise()
-		.query(sql)
-		.then(([departments]) => {
-			const deptsArray = departments.map((department) => department.name)
-			return deptsArray
-		})
-		.catch((err) => {
-			console.error('Error fetching all departments: ', err)
-			throw err // Re-throw the error to handle it outside this function
-		})
-}
-
 function addRole() {
-	getDepartments()
+	getDepartmentNames()
 		.then((departments) => {
 			inquirer
 				.prompt([
@@ -60,14 +50,17 @@ function addRole() {
 					}
 				])
 				.then(({ name, salary, department }) => {
-					let sql = 'INSERT INTO role (title, salary, department_name) VALUES (?, ?, ?)'
+					const departmentId = departments.indexOf(department) + 1
+					let sql = `
+					INSERT INTO role (title, salary, department_id)
+					VALUES (?, ?, ?)`
 					db.promise()
-						.query(sql, [name, salary, department])
+						.query(sql, [name, salary, departmentId])
 						.then(() => {
 							console.log('')
 							console.log('================================================')
 							console.log('')
-							console.log(`${name} role successfully added!`)
+							console.log(`${name} role successfully added to the ${department} department!`)
 							getAllRoles() // Assuming you have a function named getAllRoles
 						})
 						.catch((err) => console.error('Error adding role:', err))
@@ -77,4 +70,4 @@ function addRole() {
 		.catch((err) => console.error('Error getting departments:', err))
 }
 
-export { addRole, getAllRoles, getDepartments }
+export { addRole, getAllRoles }
