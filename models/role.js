@@ -26,6 +26,20 @@ function getAllRoles() {
 		.catch((err) => console.error(err))
 }
 
+function getRoleTitles() {
+	const sql = 'SELECT title FROM role'
+	return db
+		.promise()
+		.query(sql)
+		.then(([roles]) => {
+			const titlesArray = roles.map((role) => role.title)
+			return titlesArray
+		})
+		.catch((err) => {
+			console.error('Error fetching all role titles: ', err)
+		})
+}
+
 function addRole() {
 	getDepartmentNames()
 		.then((departments) => {
@@ -70,4 +84,4 @@ function addRole() {
 		.catch((err) => console.error('Error getting departments:', err))
 }
 
-export { addRole, getAllRoles }
+export { addRole, getAllRoles, getRoleTitles }

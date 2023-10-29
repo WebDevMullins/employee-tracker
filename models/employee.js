@@ -1,6 +1,8 @@
 import * as cTable from 'console.table'
+import inquirer from 'inquirer'
 import { mainMenu } from '../cli/mainMenu.js'
 import { db } from '../config/db.js'
+import { getRoleTitles } from './role.js'
 
 function getAllEmployees() {
 	const sql = `
@@ -31,4 +33,71 @@ function getAllEmployees() {
 		.catch((err) => console.error(err))
 }
 
-export { getAllEmployees }
+function getManagers() {
+	const sql = `
+	SELECT first_name, last_name, manager_id 
+	FROM employee
+	WHERE manager_id IS NULL`
+	return db
+		.promise()
+		.query(sql)
+		.then(([manager]) => {
+			const managersArray = manager.map((employee) => [employee.first_name, employee.last_name].join(' '))
+			return managersArray
+		})
+		.catch((err) => {
+			console.error('Error fetching all manager names: ', err)
+		})
+}
+
+// employee’s first name, last name, role, and manager
+function addEmployee() {
+	Promise.all([getRoleTitles(), getManagers()]).then(([roles, managers]) => {
+		inquirer
+			.prompt([
+				{
+					type: 'input',
+					name: 'fName',
+					message: 'What is their first name?'
+				},
+				{
+					type: 'input',
+					name: 'lName',
+					message: 'What is their last name?'
+				},
+				{
+					type: 'list',
+					name: 'role',
+					message: 'What is their role?',
+					choices: roles,
+					loop: false
+				},
+				{
+					type: 'list',
+					name: 'manager',
+					message: 'Who is their manager?',
+					choices: managers,
+					loop: false
+				}
+			])
+			.then(({ fName, lName, role, manager }) => {
+				const roleId = roles.indexOf(role) + 1
+				const managerId = managers.indexOf(manager) + 1
+				let sql = `
+			INSERT INTO employee (first_name, last_name, role_id, manager_id) 
+			VALUES (?, ?, ?, ?)`
+				db.promise()
+					.query(sql, [fName, lName, roleId, managerId])
+					.then(() => {
+						console.log('')
+						console.log('================================================')
+						console.log('')
+						console.log(`${fName} ${lName} has been successfully added!`)
+						getAllEmployees()
+					})
+			})
+			.catch((err) => console.error('Error adding department:', err))
+	})
+}
+
+export { addEmployee, getAllEmployees, getManagers }
