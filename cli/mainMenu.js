@@ -44,7 +44,9 @@ const mainMenu = () => {
 				case 'Update an Employee':
 					break
 				case 'Quit':
+					console.clear()
 					console.log('Goodbye!')
+					process.exit()
 					break
 			}
 		})
