@@ -1,6 +1,6 @@
 import * as cTable from 'console.table'
 import inquirer from 'inquirer'
-import { mainMenu } from '../cli/mainMenu.js'
+import { subMenu } from '../cli/subMenu.js'
 import { db } from '../config/db.js'
 import { validateList, validateName, validateSalary } from '../validators/validation.js'
 import { getDepartmentNames } from './department.js'
@@ -9,7 +9,7 @@ import { getAllEmployees, getEmployeesByName } from './employee.js'
 function getAllRoles() {
 	const sql = `
 	SELECT 
-		r.id, r.title, d.name, r.salary 
+		r.id ID, r.title Title, d.name "Deptartment", r.salary Salary 
 	FROM role r
 	INNER JOIN department d
 	ON r.department_id = d.id
@@ -23,7 +23,7 @@ function getAllRoles() {
 			console.table(roles)
 			console.log(`================================================`)
 			console.log('')
-			mainMenu()
+			subMenu()
 		})
 		.catch((err) => console.error(err))
 }
@@ -77,13 +77,13 @@ function addRole() {
 					db.promise()
 						.query(sql, [name, salary, departmentId])
 						.then(() => {
+							console.clear()
 							console.log('')
 							console.log('================================================')
 							console.log('')
-							console.log(`${name} role successfully added to the ${department} department!`)
+							console.log(`${name} role successfully added to the ${department} department`)
 							getAllRoles()
 						})
-						.catch((err) => console.error('Error adding role:', err))
 				})
 				.catch((err) => console.error('Error prompting for role details:', err))
 		})
@@ -127,7 +127,7 @@ function updateRole() {
 							console.log('')
 							console.log('================================================')
 							console.log('')
-							console.log(`${employee}'s role updated to the ${role}`)
+							console.log(`${employee}'s role updated to ${role}`)
 							getAllEmployees()
 						})
 						.catch((err) => console.error('Error updating role:', err))

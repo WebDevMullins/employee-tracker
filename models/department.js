@@ -56,7 +56,6 @@ function addDepartment() {
 					console.log(`${newDepartment} department added to the database`)
 					getAllDepartments()
 				})
-			subMenu()
 		})
 		.catch((err) => console.error('Error adding department:', err))
 }

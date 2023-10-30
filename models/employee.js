@@ -1,6 +1,5 @@
 import * as cTable from 'console.table'
 import inquirer from 'inquirer'
-import { mainMenu } from '../cli/mainMenu.js'
 import { subMenu } from '../cli/subMenu.js'
 import { db } from '../config/db.js'
 import { validateList, validateName } from '../validators/validation.js'
@@ -120,7 +119,6 @@ function addEmployee() {
 						console.log(`${fName} ${lName} added to the database`)
 						getAllEmployees()
 					})
-				subMenu()
 			})
 			.catch((err) => console.error('Error adding department:', err))
 	})
