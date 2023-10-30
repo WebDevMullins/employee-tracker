@@ -2,6 +2,7 @@ import * as cTable from 'console.table'
 import inquirer from 'inquirer'
 import { mainMenu } from '../cli/mainMenu.js'
 import { db } from '../config/db.js'
+import { validateList, validateName, validateSalary } from '../validators/validation.js'
 import { getDepartmentNames } from './department.js'
 import { getAllEmployees, getEmployeesByName } from './employee.js'
 
@@ -49,19 +50,23 @@ function addRole() {
 					{
 						type: 'input',
 						name: 'name',
-						message: 'What is the role name?'
+						message: 'What is the role name?',
+						validate: validateName
 					},
 					{
 						type: 'input',
 						name: 'salary',
-						message: 'What is the salary?'
+						message: 'What is the salary?',
+						validate: validateSalary
 					},
 					{
 						type: 'list',
 						name: 'department',
 						message: 'What is the department name?',
 						choices: departments,
-						loop: false
+						loop: false,
+						pageSize: 10,
+						validate: validateList
 					}
 				])
 				.then(({ name, salary, department }) => {
@@ -76,7 +81,7 @@ function addRole() {
 							console.log('================================================')
 							console.log('')
 							console.log(`${name} role successfully added to the ${department} department!`)
-							getAllRoles() // Assuming you have a function named getAllRoles
+							getAllRoles()
 						})
 						.catch((err) => console.error('Error adding role:', err))
 				})
@@ -95,14 +100,18 @@ function updateRole() {
 						name: 'employee',
 						message: 'Which employee would you like to update?',
 						choices: employees,
-						loop: false
+						loop: false,
+						pageSize: 10,
+						validate: validateList
 					},
 					{
 						type: 'list',
 						name: 'role',
 						message: 'Which role would you like to assign?',
 						choices: roles,
-						loop: false
+						loop: false,
+						pageSize: 10,
+						validate: validateList
 					}
 				])
 				.then(({ employee, role }) => {

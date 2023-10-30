@@ -2,6 +2,7 @@ import * as cTable from 'console.table'
 import inquirer from 'inquirer'
 import { mainMenu } from '../cli/mainMenu.js'
 import { db } from '../config/db.js'
+import { validateList, validateName } from '../validators/validation.js'
 import { getRoleTitles } from './role.js'
 
 function getAllEmployees() {
@@ -74,26 +75,32 @@ function addEmployee() {
 				{
 					type: 'input',
 					name: 'fName',
-					message: 'What is their first name?'
+					message: 'What is their first name?',
+					validate: validateName
 				},
 				{
 					type: 'input',
 					name: 'lName',
-					message: 'What is their last name?'
+					message: 'What is their last name?',
+					validate: validateName
 				},
 				{
 					type: 'list',
 					name: 'role',
 					message: 'What is their role?',
 					choices: roles,
-					loop: false
+					loop: false,
+					pageSize: 10,
+					validate: validateList
 				},
 				{
 					type: 'list',
 					name: 'manager',
 					message: 'Who is their manager?',
 					choices: managers,
-					loop: false
+					loop: false,
+					pageSize: 10,
+					validate: validateList
 				}
 			])
 			.then(({ fName, lName, role, manager }) => {
@@ -116,4 +123,4 @@ function addEmployee() {
 	})
 }
 
-export { addEmployee, getAllEmployees, getManagers, getEmployeesByName }
+export { addEmployee, getAllEmployees, getEmployeesByName, getManagers }

@@ -2,6 +2,7 @@ import * as cTable from 'console.table'
 import inquirer from 'inquirer'
 import { mainMenu } from '../cli/mainMenu.js'
 import { db } from '../config/db.js'
+import { validateName } from '../validators/validation.js'
 
 function getAllDepartments() {
 	const sql = 'SELECT id, name FROM department'
@@ -39,7 +40,8 @@ function addDepartment() {
 			{
 				type: 'input',
 				name: 'newDepartment',
-				message: 'What is the department name?'
+				message: 'What is the department name?',
+				validate: validateName
 			}
 		])
 		.then(({ newDepartment }) => {
