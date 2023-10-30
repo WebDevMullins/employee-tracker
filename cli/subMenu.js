@@ -7,7 +7,7 @@ const subMenu = () => {
 		.prompt({
 			type: 'list',
 			name: 'selected',
-			message: 'Main Menu or Quit?',
+			message: 'Go to Main Menu or Quit?',
 			choices: ['Main Menu', 'Quit'],
 			loop: false,
 			validate: validateList

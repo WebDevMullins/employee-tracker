@@ -1,11 +1,12 @@
 import * as cTable from 'console.table'
 import inquirer from 'inquirer'
 import { mainMenu } from '../cli/mainMenu.js'
+import { subMenu } from '../cli/subMenu.js'
 import { db } from '../config/db.js'
 import { validateName } from '../validators/validation.js'
 
 function getAllDepartments() {
-	const sql = 'SELECT id, name FROM department'
+	const sql = 'SELECT id ID, name Department FROM department'
 	db.promise()
 		.query(sql)
 		.then(([departments]) => {
@@ -15,7 +16,7 @@ function getAllDepartments() {
 			console.table(departments)
 			console.log(`================================================`)
 			console.log('')
-			mainMenu()
+			subMenu()
 		})
 		.catch((err) => console.error('Error fetching all departments: ', err))
 }
@@ -49,12 +50,14 @@ function addDepartment() {
 			db.promise()
 				.query(sql, [newDepartment])
 				.then(() => {
+					console.clear()
 					console.log('')
 					console.log('================================================')
 					console.log('')
-					console.log(`${newDepartment} department successfully added!`)
+					console.log(`${newDepartment} department added to the database`)
 					getAllDepartments()
 				})
+			subMenu()
 		})
 		.catch((err) => console.error('Error adding department:', err))
 }
