@@ -33,6 +33,22 @@ function getAllEmployees() {
 		.catch((err) => console.error(err))
 }
 
+function getEmployeesByName() {
+	const sql = `
+	SELECT first_name, last_name 
+	FROM employee`
+	return db
+		.promise()
+		.query(sql)
+		.then(([employee]) => {
+			const employeeNameArray = employee.map((employee) => [employee.first_name, employee.last_name].join(' '))
+			return employeeNameArray
+		})
+		.catch((err) => {
+			console.error('Error fetching all employee names: ', err)
+		})
+}
+
 function getManagers() {
 	const sql = `
 	SELECT first_name, last_name, manager_id 
@@ -100,4 +116,4 @@ function addEmployee() {
 	})
 }
 
-export { addEmployee, getAllEmployees, getManagers }
+export { addEmployee, getAllEmployees, getManagers, getEmployeesByName }

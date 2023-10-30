@@ -1,7 +1,7 @@
 import inquirer from 'inquirer'
 import { addDepartment, getAllDepartments } from '../models/department.js'
-import { addEmployee, getAllEmployees, getManagers } from '../models/employee.js'
-import { addRole, getAllRoles } from '../models/role.js'
+import { addEmployee, getAllEmployees } from '../models/employee.js'
+import { addRole, getAllRoles, updateRole } from '../models/role.js'
 
 const mainMenu = () => {
 	inquirer
@@ -41,7 +41,8 @@ const mainMenu = () => {
 				case 'Add an Employee':
 					addEmployee()
 					break
-				case 'Update an Employee':
+				case 'Update an Employee Role':
+					updateRole()
 					break
 				case 'Quit':
 					console.clear()

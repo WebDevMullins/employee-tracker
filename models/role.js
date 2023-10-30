@@ -3,6 +3,7 @@ import inquirer from 'inquirer'
 import { mainMenu } from '../cli/mainMenu.js'
 import { db } from '../config/db.js'
 import { getDepartmentNames } from './department.js'
+import { getAllEmployees, getEmployeesByName } from './employee.js'
 
 function getAllRoles() {
 	const sql = `
@@ -11,7 +12,7 @@ function getAllRoles() {
 	FROM role r
 	INNER JOIN department d
 	ON r.department_id = d.id
-	ORDER BY department_id ASC`
+	ORDER BY id ASC`
 	db.promise()
 		.query(sql)
 		.then(([roles]) => {
@@ -84,4 +85,47 @@ function addRole() {
 		.catch((err) => console.error('Error getting departments:', err))
 }
 
-export { addRole, getAllRoles, getRoleTitles }
+function updateRole() {
+	Promise.all([getEmployeesByName(), getRoleTitles()])
+		.then(([employees, roles]) => {
+			inquirer
+				.prompt([
+					{
+						type: 'list',
+						name: 'employee',
+						message: 'Which employee would you like to update?',
+						choices: employees,
+						loop: false
+					},
+					{
+						type: 'list',
+						name: 'role',
+						message: 'Which role would you like to assign?',
+						choices: roles,
+						loop: false
+					}
+				])
+				.then(({ employee, role }) => {
+					const employeeId = employees.indexOf(employee) + 1
+					const roleId = roles.indexOf(role) + 1
+					let sql = `
+					UPDATE employee e
+					SET e.role_id = ?
+					WHERE e.id = ?`
+					db.promise()
+						.query(sql, [roleId, employeeId])
+						.then(() => {
+							console.log('')
+							console.log('================================================')
+							console.log('')
+							console.log(`${employee}'s role updated to the ${role}`)
+							getAllEmployees()
+						})
+						.catch((err) => console.error('Error updating role:', err))
+				})
+				.catch((err) => console.error('Error prompting:', err))
+		})
+		.catch((err) => console.error('Error getting names or roles:', err))
+}
+
+export { addRole, getAllRoles, getRoleTitles, updateRole }
