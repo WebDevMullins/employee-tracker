@@ -2,6 +2,7 @@ import inquirer from 'inquirer'
 import { addDepartment, getAllDepartments } from '../models/department.js'
 import { addEmployee, getAllEmployees } from '../models/employee.js'
 import { addRole, getAllRoles, updateRole } from '../models/role.js'
+import { validateList } from '../validators/validation.js'
 
 const mainMenu = () => {
 	inquirer
@@ -20,7 +21,8 @@ const mainMenu = () => {
 				'Quit'
 			],
 			loop: false,
-			pageSize: 8
+			pageSize: 8,
+			validate: validateList
 		})
 		.then(({ selected }) => {
 			switch (selected) {
@@ -56,7 +58,6 @@ const mainMenu = () => {
 					console.clear()
 					console.log('Goodbye!')
 					process.exit()
-					break
 			}
 		})
 }
