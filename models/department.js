@@ -1,6 +1,5 @@
 import * as cTable from 'console.table'
 import inquirer from 'inquirer'
-import { mainMenu } from '../cli/mainMenu.js'
 import { subMenu } from '../cli/subMenu.js'
 import { db } from '../config/db.js'
 import { validateName } from '../validators/validation.js'

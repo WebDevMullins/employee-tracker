@@ -1,6 +1,7 @@
 import * as cTable from 'console.table'
 import inquirer from 'inquirer'
 import { mainMenu } from '../cli/mainMenu.js'
+import { subMenu } from '../cli/subMenu.js'
 import { db } from '../config/db.js'
 import { validateList, validateName } from '../validators/validation.js'
 import { getRoleTitles } from './role.js'
@@ -8,13 +9,13 @@ import { getRoleTitles } from './role.js'
 function getAllEmployees() {
 	const sql = `
 		SELECT 
-			e.id AS EmployeeID, 
-			e.first_name AS FirstName, 
-			e.last_name AS LastName, 
-			r.title AS JobTitle, 
-			d.name AS Department, 
-			r.salary AS Salary, 
-			CONCAT(m.first_name, ' ', m.last_name) AS Manager
+			e.id ID, 
+			e.first_name "First Name", 
+			e.last_name "Last Name", 
+			r.title "Job Title", 
+			d.name Department, 
+			r.salary Salary, 
+			CONCAT(m.first_name, ' ', m.last_name) Manager
 		FROM employee e
 		INNER JOIN role r ON e.role_id = r.id
 		INNER JOIN department d ON r.department_id = d.id
@@ -29,7 +30,7 @@ function getAllEmployees() {
 			console.table(emplpoyees)
 			console.log(`================================================`)
 			console.log('')
-			mainMenu()
+			subMenu()
 		})
 		.catch((err) => console.error(err))
 }
@@ -112,12 +113,14 @@ function addEmployee() {
 				db.promise()
 					.query(sql, [fName, lName, roleId, managerId])
 					.then(() => {
+						console.clear()
 						console.log('')
 						console.log('================================================')
 						console.log('')
-						console.log(`${fName} ${lName} has been successfully added!`)
+						console.log(`${fName} ${lName} added to the database`)
 						getAllEmployees()
 					})
+				subMenu()
 			})
 			.catch((err) => console.error('Error adding department:', err))
 	})
