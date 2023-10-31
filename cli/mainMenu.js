@@ -4,6 +4,7 @@ import { addEmployee, getAllEmployees } from '../models/employee.js'
 import { addRole, getAllRoles, updateRole } from '../models/role.js'
 import { validateList } from '../validators/validation.js'
 
+// The main menu of prompts using inquirer
 const mainMenu = () => {
 	inquirer
 		.prompt({
@@ -20,9 +21,9 @@ const mainMenu = () => {
 				'Update an Employee Role',
 				'Quit'
 			],
-			loop: false,
-			pageSize: 8,
-			validate: validateList
+			loop: false, // Disables looping of the list at the end
+			pageSize: 8, // Default number of items shown before scrolling
+			validate: validateList // Validation of list
 		})
 		.then(({ selected }) => {
 			switch (selected) {

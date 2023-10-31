@@ -5,6 +5,7 @@ import { db } from '../config/db.js'
 import { validateList, validateName } from '../validators/validation.js'
 import { getRoleTitles } from './role.js'
 
+// Get employee by id, first and last name, role, salary, and manager
 function getAllEmployees() {
 	const sql = `
 		SELECT 
@@ -26,14 +27,15 @@ function getAllEmployees() {
 			console.log('')
 			console.log(`================================================`)
 			console.log('')
-			console.table(emplpoyees)
+			console.table(emplpoyees) // Display table
 			console.log(`================================================`)
 			console.log('')
-			subMenu()
+			subMenu() // Display submenu
 		})
 		.catch((err) => console.error(err))
 }
 
+// Get all employees by first and last name
 function getEmployeesByName() {
 	const sql = `
 	SELECT first_name, last_name 
@@ -42,6 +44,7 @@ function getEmployeesByName() {
 		.promise()
 		.query(sql)
 		.then(([employee]) => {
+			// Map over result and save to array
 			const employeeNameArray = employee.map((employee) => [employee.first_name, employee.last_name].join(' '))
 			return employeeNameArray
 		})
@@ -50,6 +53,7 @@ function getEmployeesByName() {
 		})
 }
 
+// Get managers by first and last name
 function getManagers() {
 	const sql = `
 	SELECT first_name, last_name, manager_id 
@@ -59,6 +63,7 @@ function getManagers() {
 		.promise()
 		.query(sql)
 		.then(([manager]) => {
+			// Map over result and save as array
 			const managersArray = manager.map((employee) => [employee.first_name, employee.last_name].join(' '))
 			return managersArray
 		})
@@ -67,8 +72,9 @@ function getManagers() {
 		})
 }
 
-// employee’s first name, last name, role, and manager
+// Add employee 
 function addEmployee() {
+	// Get all role names and manager names
 	Promise.all([getRoleTitles(), getManagers()]).then(([roles, managers]) => {
 		inquirer
 			.prompt([
@@ -104,8 +110,8 @@ function addEmployee() {
 				}
 			])
 			.then(({ fName, lName, role, manager }) => {
-				const roleId = roles.indexOf(role) + 1
-				const managerId = managers.indexOf(manager) + 1
+				const roleId = roles.indexOf(role) + 1 // Add 1 to the index of the response array to get the role id
+				const managerId = managers.indexOf(manager) + 1 // Add 1 to the index of the response array to get the manager id
 				let sql = `
 			INSERT INTO employee (first_name, last_name, role_id, manager_id) 
 			VALUES (?, ?, ?, ?)`
@@ -117,7 +123,7 @@ function addEmployee() {
 						console.log('================================================')
 						console.log('')
 						console.log(`${fName} ${lName} added to the database`)
-						getAllEmployees()
+						getAllEmployees() // Display employee table
 					})
 			})
 			.catch((err) => console.error('Error adding department:', err))

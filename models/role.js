@@ -6,6 +6,7 @@ import { validateList, validateName, validateSalary } from '../validators/valida
 import { getDepartmentNames } from './department.js'
 import { getAllEmployees, getEmployeesByName } from './employee.js'
 
+// Get role id, title, department name (from department table), salary
 function getAllRoles() {
 	const sql = `
 	SELECT 
@@ -20,20 +21,22 @@ function getAllRoles() {
 			console.log('')
 			console.log(`================================================`)
 			console.log('')
-			console.table(roles)
+			console.table(roles) // Display table
 			console.log(`================================================`)
 			console.log('')
-			subMenu()
+			subMenu() // Display submenu
 		})
 		.catch((err) => console.error(err))
 }
 
+// Get all role titles
 function getRoleTitles() {
 	const sql = 'SELECT title FROM role'
 	return db
 		.promise()
 		.query(sql)
 		.then(([roles]) => {
+			// Map over results and save as array
 			const titlesArray = roles.map((role) => role.title)
 			return titlesArray
 		})
@@ -42,8 +45,9 @@ function getRoleTitles() {
 		})
 }
 
+// Add role to table
 function addRole() {
-	getDepartmentNames()
+	getDepartmentNames() // Get all department names
 		.then((departments) => {
 			inquirer
 				.prompt([
@@ -70,7 +74,7 @@ function addRole() {
 					}
 				])
 				.then(({ name, salary, department }) => {
-					const departmentId = departments.indexOf(department) + 1
+					const departmentId = departments.indexOf(department) + 1 // Add 1 to the index of the response array to get the department
 					let sql = `
 					INSERT INTO role (title, salary, department_id)
 					VALUES (?, ?, ?)`
@@ -82,7 +86,7 @@ function addRole() {
 							console.log('================================================')
 							console.log('')
 							console.log(`${name} role successfully added to the ${department} department`)
-							getAllRoles()
+							getAllRoles() // Display role table
 						})
 				})
 				.catch((err) => console.error('Error prompting for role details:', err))
@@ -90,7 +94,9 @@ function addRole() {
 		.catch((err) => console.error('Error getting departments:', err))
 }
 
+// Update the employees role
 function updateRole() {
+	// Get all employee names and all role titles
 	Promise.all([getEmployeesByName(), getRoleTitles()])
 		.then(([employees, roles]) => {
 			inquirer
@@ -115,8 +121,8 @@ function updateRole() {
 					}
 				])
 				.then(({ employee, role }) => {
-					const employeeId = employees.indexOf(employee) + 1
-					const roleId = roles.indexOf(role) + 1
+					const employeeId = employees.indexOf(employee) + 1 // Add 1 to the index of the response array to get the employee id
+					const roleId = roles.indexOf(role) + 1 // Add 1 to the index of the response array to get the role id
 					let sql = `
 					UPDATE employee e
 					SET e.role_id = ?
@@ -128,7 +134,7 @@ function updateRole() {
 							console.log('================================================')
 							console.log('')
 							console.log(`${employee}'s role updated to ${role}`)
-							getAllEmployees()
+							getAllEmployees() // Display employee table
 						})
 						.catch((err) => console.error('Error updating role:', err))
 				})

@@ -4,6 +4,7 @@ import { subMenu } from '../cli/subMenu.js'
 import { db } from '../config/db.js'
 import { validateName } from '../validators/validation.js'
 
+// Get all ids and names from the department table
 function getAllDepartments() {
 	const sql = 'SELECT id ID, name Department FROM department'
 	db.promise()
@@ -12,20 +13,22 @@ function getAllDepartments() {
 			console.log('')
 			console.log(`================================================`)
 			console.log('')
-			console.table(departments)
+			console.table(departments) // Display table
 			console.log(`================================================`)
 			console.log('')
-			subMenu()
+			subMenu() // Display submenu
 		})
 		.catch((err) => console.error('Error fetching all departments: ', err))
 }
 
+// Get all names from the department table
 function getDepartmentNames() {
 	const sql = 'SELECT name FROM department'
 	return db
 		.promise()
 		.query(sql)
 		.then(([departments]) => {
+			// Map over results and save to array
 			const deptsArray = departments.map((department) => department.name)
 			return deptsArray
 		})
@@ -34,6 +37,7 @@ function getDepartmentNames() {
 		})
 }
 
+// Add department to the department table
 function addDepartment() {
 	inquirer
 		.prompt([
@@ -41,7 +45,7 @@ function addDepartment() {
 				type: 'input',
 				name: 'newDepartment',
 				message: 'What is the department name?',
-				validate: validateName
+				validate: validateName // Validation of list
 			}
 		])
 		.then(({ newDepartment }) => {
@@ -54,7 +58,7 @@ function addDepartment() {
 					console.log('================================================')
 					console.log('')
 					console.log(`${newDepartment} department added to the database`)
-					getAllDepartments()
+					getAllDepartments() // Display department table
 				})
 		})
 		.catch((err) => console.error('Error adding department:', err))

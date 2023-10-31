@@ -2,6 +2,7 @@ import inquirer from 'inquirer'
 import { validateList } from '../validators/validation.js'
 import { mainMenu } from './mainMenu.js'
 
+// Submenu of prompts
 const subMenu = () => {
 	inquirer
 		.prompt({
@@ -9,8 +10,8 @@ const subMenu = () => {
 			name: 'selected',
 			message: 'Go to Main Menu or Quit?',
 			choices: ['Main Menu', 'Quit'],
-			loop: false,
-			validate: validateList
+			loop: false, // Disables looping of the list at the end
+			validate: validateList // Validation of list
 		})
 		.then(({ selected }) => {
 			switch (selected) {
