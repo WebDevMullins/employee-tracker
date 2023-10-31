@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/WebDevMullins/employee-tracker#readme",
   "dependencies": {
+    "console.table": "^0.10.0",
     "dotenv": "^16.3.1",
     "inquirer": "^9.2.11",
     "mysql2": "^3.6.2"
