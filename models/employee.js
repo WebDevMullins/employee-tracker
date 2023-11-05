@@ -76,7 +76,6 @@ function getManagers() {
 function addEmployee() {
 	// Get all role names and manager names
 	Promise.all([getRoleTitles(), getManagers()]).then(([roles, managers]) => {
-		console.log(managers)
 		inquirer
 			.prompt([
 				{
