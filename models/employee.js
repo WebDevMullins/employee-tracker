@@ -72,10 +72,11 @@ function getManagers() {
 		})
 }
 
-// Add employee 
+// Add employee
 function addEmployee() {
 	// Get all role names and manager names
 	Promise.all([getRoleTitles(), getManagers()]).then(([roles, managers]) => {
+		console.log(managers)
 		inquirer
 			.prompt([
 				{
@@ -103,7 +104,7 @@ function addEmployee() {
 					type: 'list',
 					name: 'manager',
 					message: 'Who is their manager?',
-					choices: managers,
+					choices: [...managers, new inquirer.Separator(), 'No Manager'],
 					loop: false,
 					pageSize: 10,
 					validate: validateList
@@ -111,7 +112,16 @@ function addEmployee() {
 			])
 			.then(({ fName, lName, role, manager }) => {
 				const roleId = roles.indexOf(role) + 1 // Add 1 to the index of the response array to get the role id
-				const managerId = managers.indexOf(manager) + 1 // Add 1 to the index of the response array to get the manager id
+				let managerId = null
+
+				if (managerId !== 'No Manager') {
+					const managerIndex = managers.indexOf(manager)
+					if (managerIndex !== -1) {
+						// Add 1 to the index of the response array to get the manager id
+						managerId = managerIndex + 1
+					}
+				}
+
 				let sql = `
 			INSERT INTO employee (first_name, last_name, role_id, manager_id) 
 			VALUES (?, ?, ?, ?)`
